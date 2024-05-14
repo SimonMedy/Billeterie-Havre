@@ -9,13 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CalendarController extends AbstractController
 {
-    #[Route('/calendar', name: 'app_calendar')]
-    public function index(): Response
-    {
-        return $this->render('calendar/index.html.twig');
-    }
 
-    #[Route('/api/events', name: 'api_events')]
+    #[Route('/CalendarEvents', name: 'api_events')]
     public function events(EventRepository $eventRepository): JsonResponse
     {
         $events = $eventRepository->findAll();
