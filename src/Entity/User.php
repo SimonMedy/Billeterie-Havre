@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -26,9 +28,16 @@ class User implements UserInterface
     #[ORM\Column]
     private array $role = [];
 
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'Reservation')]
+    private Collection $events;
+
     public function __construct()
     {
         $this->role = ['ROLE_USER'];
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,5 +96,32 @@ class User implements UserInterface
     public function eraseCredentials(): void
     {
         // Ne fait rien par défaut
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->addReservation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            $event->removeReservation($this);
+        }
+
+        return $this;
     }
 }

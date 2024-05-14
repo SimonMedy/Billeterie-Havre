@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,17 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?Type $id_type = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events')]
+    private Collection $Reservation;
+
+    public function __construct()
+    {
+        $this->Reservation = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +133,30 @@ class Event
     public function setIdType(?Type $id_type): static
     {
         $this->id_type = $id_type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getReservation(): Collection
+    {
+        return $this->Reservation;
+    }
+
+    public function addReservation(User $reservation): static
+    {
+        if (!$this->Reservation->contains($reservation)) {
+            $this->Reservation->add($reservation);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(User $reservation): static
+    {
+        $this->Reservation->removeElement($reservation);
 
         return $this;
     }
