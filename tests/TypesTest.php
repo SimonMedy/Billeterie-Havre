@@ -38,5 +38,6 @@ class TypeTest extends TestCase
         $this->assertCount(1, $type->getEvents());
         $this->assertFalse($type->getEvents()->contains($event1));
         $this->assertNull($event1->getIdType());
+        
     }
 }
