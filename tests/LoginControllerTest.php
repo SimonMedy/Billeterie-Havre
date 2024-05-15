@@ -40,11 +40,11 @@ class LoginControllerTest extends WebTestCase
 
     public function testLogin(): void
     {
-        echo("starting");
+
         // Denied - Can't login with invalid email address.
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
-        echo("isok");
+
         $this->client->submitForm('Sign in', [
             '_username' => 'd@d.d',
             '_password' => 'testphpunit@php.php',
@@ -55,34 +55,34 @@ class LoginControllerTest extends WebTestCase
 
         // Ensure we do not reveal if the user exists or not.
         self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
-        echo("isok");
+
         // Denied - Can't login with invalid password.
         $this->client->request('GET', '/login');
         self::assertResponseIsSuccessful();
-        echo("isok");
+
         $this->client->submitForm('Sign in', [
             '_username' => 'testphpunit@php.php',
             '_password' => 'dddddd',
         ]);
 
         self::assertResponseRedirects('/login');
-        echo("isok");
+
         $this->client->followRedirect();
-        echo("isok");
+
         // Ensure we do not reveal the user exists but the password is wrong.
         self::assertSelectorTextContains('.alert-danger', 'Invalid credentials.');
-        echo("isok");
+
         // Success - Login with valid credentials is allowed.
         $this->client->submitForm('Sign in', [
             '_username' => 'testphpunit@php.php',
             '_password' => 'phpunit',
         ]);
-        echo("isok");
+
         self::assertResponseRedirects('/');
         $this->client->followRedirect();
-        echo("isok");
+
         self::assertSelectorNotExists('.alert-danger');
-        echo("isok");
+
     }
 }
 
