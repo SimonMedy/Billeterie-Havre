@@ -1,0 +1,8 @@
+# app/config/config_test.yml
+doctrine:
+  # ...
+  dbal:
+    host:     34.22.207.66
+    dbname:   public
+    user:     root
+    password: root
