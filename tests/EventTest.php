@@ -1,49 +1,59 @@
-<?php 
-
-
-// tests/Entity/EventTest.php
+<?php
 
 namespace App\Tests\Entity;
 
 use App\Entity\Event;
+use App\Entity\Utilisateur;
 use PHPUnit\Framework\TestCase;
-use App\Entity\User;
-
-
+use App\Entity\Type;
 class EventTest extends TestCase
 {
-    public function testEventAttributes()
+    public function testGettersAndSetters(): void
     {
         $event = new Event();
 
-        $event->setNom('Concert')
-              ->setDate(new \DateTimeImmutable('2023-05-14'))
-              ->setDescription('Concert de musique classique')
-              ->setAgeRestrict(18)
-              ->setAnnule(false)
-              ->setMessage('Ne manquez pas cet événement exceptionnel');
+        $event->setNom('Concert');
+        $this->assertSame('Concert', $event->getNom());
 
-        $this->assertEquals('Concert', $event->getNom());
-        $this->assertEquals('2023-05-14', $event->getDate()->format('Y-m-d'));
-        $this->assertEquals('Concert de musique classique', $event->getDescription());
-        $this->assertEquals(18, $event->getAgeRestrict());
-        $this->assertFalse($event->isAnnule());
-        $this->assertEquals('Ne manquez pas cet événement exceptionnel', $event->getMessage());
+        $date = new \DateTimeImmutable('2024-05-15');
+        $event->setDate($date);
+        $this->assertSame($date, $event->getDate());
+
+        $event->setDescription('Description du concert');
+        $this->assertSame('Description du concert', $event->getDescription());
+
+        $event->setAgeRestrict(18);
+        $this->assertSame(18, $event->getAgeRestrict());
+
+        $event->setAnnule(true);
+        $this->assertTrue($event->isAnnule());
+
+        $event->setMessage('Message important');
+        $this->assertSame('Message important', $event->getMessage());
+
+        $type = new Type();
+        $event->setIdType($type);
+        $this->assertSame($type, $event->getIdType());
     }
 
-    public function testAddRemoveReservation()
+    public function testReservation(): void
     {
         $event = new Event();
-        $user = $this->createMock(User::class);
+        $user1 = new Utilisateur();
+        $user2 = new Utilisateur();
 
-        $event->addReservation($user);
-        $this->assertCount(1, $event->getReservation());
-
-        $event->removeReservation($user);
         $this->assertCount(0, $event->getReservation());
+
+        $event->addReservation($user1);
+        $this->assertCount(1, $event->getReservation());
+        $this->assertTrue($event->getReservation()->contains($user1));
+
+        $event->addReservation($user2);
+        $this->assertCount(2, $event->getReservation());
+        $this->assertTrue($event->getReservation()->contains($user2));
+
+        $event->removeReservation($user1);
+        $this->assertCount(1, $event->getReservation());
+        $this->assertFalse($event->getReservation()->contains($user1));
     }
 }
-
-
-
-?>
