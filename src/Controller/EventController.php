@@ -7,6 +7,7 @@ use App\Form\EventType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -48,6 +49,31 @@ class EventController extends AbstractController
         return $this->render('event/show.html.twig', [
             'event' => $event,
         ]);
+    }
+
+
+    #[Route('/{id}/annulerevent', name: 'annulerevent', methods: ['GET','POST'])]
+    public function annulerevent(Event $event,EntityManagerInterface $entityManager): Response
+    {
+        $event->setAnnule(true);
+        $entityManager->persist($event);
+        $entityManager->flush();
+
+        return new JsonResponse($event);
+
+    }
+
+
+
+    #[Route('/{id}/activerevent', name: 'activerevent', methods: ['GET','POST'])]
+    public function activerevent(Event $event,EntityManagerInterface $entityManager): Response
+    {
+        $event->setAnnule(false);
+        $entityManager->persist($event);
+        $entityManager->flush();
+
+        return new JsonResponse($event);
+
     }
 
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
