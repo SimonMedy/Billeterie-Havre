@@ -10,8 +10,8 @@ class UtilisateurTest extends TestCase
     public function testGettersAndSetters()
     {
         $user = new Utilisateur();
-        $user->setEmail('test@example.com');
-        $this->assertEquals('test@example.com', $user->getEmail());
+        $user->setEmail('test@test.com');
+        $this->assertEquals('test@test.com', $user->getEmail());
 
         $user->setPassword('password');
         $this->assertEquals('password', $user->getPassword());
@@ -28,7 +28,7 @@ class UtilisateurTest extends TestCase
     public function testUserIdentifier()
     {
         $user = new Utilisateur();
-        $user->setEmail('test@example.com');
-        $this->assertEquals('test@example.com', $user->getUserIdentifier());
+        $user->setEmail('test@test.com');
+        $this->assertEquals('test@test.com', $user->getUserIdentifier());
     }
 }
