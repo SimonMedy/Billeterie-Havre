@@ -7,8 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use App\Entity\Utilisateur as User;
+use Symfony\Config\ApiPlatformConfig;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
+#[ApiResource]
+
 class Event
 {
     #[ORM\Id]
