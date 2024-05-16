@@ -60,7 +60,6 @@ class EventController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse($event);
-
     }
 
 
