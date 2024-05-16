@@ -38,6 +38,11 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $age = null;
 
+    public function __construct()
+    {
+        $this->roles = ['ROLE_USER'];
+    }
+
     public function getId(): ?int
     {
         return $this->id;
