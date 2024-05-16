@@ -3,17 +3,61 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 50vh;">
+        <div class="col-md-6 col-lg-4">
 
-    {{ form_errors(registrationForm) }}
+            <!-- Bootstrap card for the form -->
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="h3 mb-3 font-weight-normal text-center">Register</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+                    {{ form_start(registrationForm, {'attr': {'class': 'form-signin'}}) }}
+                    
+                    {% if form_errors(registrationForm) %}
+                        <div class="alert alert-danger">
+                            {{ form_errors(registrationForm) }}
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        {{ form_row(registrationForm.email, {
+                            'attr': {'class': 'form-control mb-3', 'placeholder': 'Email address'}
+                        }) }}
+                    </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        {{ form_row(registrationForm.plainPassword, {
+                            'label': 'Password',
+                            'attr': {'class': 'form-control mb-3', 'placeholder': 'Password'}
+                        }) }}
+                    </div>
+
+                    <!-- Age Field (assuming it exists in your form type) -->
+                    <div class="form-group">
+                        {{ form_row(registrationForm.age, {
+                            'label': 'Your Age',
+                            'attr': {'class': 'form-control mb-3', 'placeholder': 'Age'}
+                        }) }}
+                    </div>
+
+                    <!-- Agree Terms Checkbox Corrected Layout -->
+                    <div class="form-group form-check">
+                        {{ form_widget(registrationForm.agreeTerms, {
+                            'attr': {'class': 'form-check-input'}
+                        }) }}
+                        {{ form_label(registrationForm.agreeTerms) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block mt-4">Register</button>
+
+                    {{ form_end(registrationForm) }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}
