@@ -6,7 +6,7 @@ use App\Entity\Type;
 use App\Entity\Event;
 use PHPUnit\Framework\TestCase;
 
-class TypeTest extends TestCase
+class TypesTest extends TestCase
 {
     public function testGettersAndSetters(): void
     {
@@ -38,6 +38,6 @@ class TypeTest extends TestCase
         $this->assertCount(1, $type->getEvents());
         $this->assertFalse($type->getEvents()->contains($event1));
         $this->assertNull($event1->getIdType());
-        
+
     }
 }
