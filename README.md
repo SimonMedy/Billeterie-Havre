@@ -6,7 +6,7 @@ Ce projet utilise PHP 8.2 et Symfony 7, ce qui lui permet de bénéficier des de
 Avant de commencer, assurez-vous d'avoir installé les outils suivants sur votre machine :
 - [PHP 8.2](https://www.php.net/releases/8_2_0.php) - La version 8.2 de PHP est requise.
 - [Composer](https://getcomposer.org/) - Gestionnaire de dépendances pour PHP.
-- [Symfony 7](https://symfony.com/download) - La version 7 de Symfony est rapide.
+- [Symfony 7](https://symfony.com/download) - La version 7 de Symfony est requise.
 - [Node.js](https://nodejs.org/) - Environnement d'exécution pour JavaScript. (npm est inclus)
 
 ## Installation
