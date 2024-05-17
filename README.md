@@ -1,5 +1,5 @@
 # Billeterie-Havre
-Une brève description de ce que fait votre projet et à qui il s'adresse. Ce projet utilise PHP 8.2 et Symfony 7, ce qui lui permet de bénéficier des dernières améliorations en termes de performances et de sécurité.
+Ce projet utilise PHP 8.2 et Symfony 7, ce qui lui permet de bénéficier des dernières améliorations en termes de performances et de sécurité.
 
 ## Prérequis
 
