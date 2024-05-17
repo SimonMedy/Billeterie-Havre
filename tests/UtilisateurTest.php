@@ -31,4 +31,5 @@ class UtilisateurTest extends TestCase
         $user->setEmail('test@test.com');
         $this->assertEquals('test@test.com', $user->getUserIdentifier());
     }
+
 }
