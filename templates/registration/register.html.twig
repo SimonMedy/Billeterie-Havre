@@ -10,7 +10,7 @@
             <!-- Bootstrap card for the form -->
             <div class="card">
                 <div class="card-body">
-                    <h1 class="h3 mb-3 font-weight-normal text-center">Register</h1>
+                    <h1 class="h3 mb-3 font-weight-normal text-center">Créer un compte</h1>
 
                     {{ form_start(registrationForm, {'attr': {'class': 'form-signin'}}) }}
                     
@@ -23,22 +23,22 @@
                     <!-- Email Field -->
                     <div class="form-group">
                         {{ form_row(registrationForm.email, {
-                            'attr': {'class': 'form-control mb-3', 'placeholder': 'Email address'}
+                            'attr': {'class': 'form-control mb-3', 'placeholder': 'Adresse email'}
                         }) }}
                     </div>
 
                     <!-- Password Field -->
                     <div class="form-group">
                         {{ form_row(registrationForm.plainPassword, {
-                            'label': 'Password',
-                            'attr': {'class': 'form-control mb-3', 'placeholder': 'Password'}
+                            'label': 'Mot de passe',
+                            'attr': {'class': 'form-control mb-3', 'placeholder': 'Mot de passe'}
                         }) }}
                     </div>
 
                     <!-- Age Field (assuming it exists in your form type) -->
                     <div class="form-group">
                         {{ form_row(registrationForm.age, {
-                            'label': 'Your Age',
+                            'label': 'Votre age',
                             'attr': {'class': 'form-control mb-3', 'placeholder': 'Age'}
                         }) }}
                     </div>
@@ -46,12 +46,13 @@
                     <!-- Agree Terms Checkbox Corrected Layout -->
                     <div class="form-group form-check">
                         {{ form_widget(registrationForm.agreeTerms, {
+                            'label': 'Accepter les conditions',
                             'attr': {'class': 'form-check-input'}
                         }) }}
                         {{ form_label(registrationForm.agreeTerms) }}
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block mt-4">Register</button>
+                    <button type="submit" class="btn btn-primary btn-block mt-4">S'inscrire</button>
 
                     {{ form_end(registrationForm) }}
                 </div>
