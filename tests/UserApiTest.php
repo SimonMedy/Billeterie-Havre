@@ -6,9 +6,28 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserApiTest extends WebTestCase
 {
+    // Fonction pour créer un utilisateur de test
+    private function createTestUser($client): array
+    {
+        // Générer un e-mail aléatoire
+        $email = 'test_' . uniqid() . '@example.com';
+        $client->request('POST', '/api/utilisateurs', [], [], ['CONTENT_TYPE' => 'application/ld+json'], json_encode([
+            'email' => $email,
+            'password' => 'password',
+            'age' => 30
+        ]));
+
+        // Vérifie la création réussie
+        $this->assertEquals(201, $client->getResponse()->getStatusCode());
+
+        // Retourne les données de l'utilisateur créé
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        return $responseData;
+    }
+
     public function testGetUsers(): void
     {
-        $client = static::createClient();
+        $client = static::createClient(); //Client http
 
         // Requete /api/utilisateurs
         $client->request('GET', '/api/utilisateurs');
@@ -27,10 +46,15 @@ class UserApiTest extends WebTestCase
     public function testGetUserById(): void
     {
         $client = static::createClient();
-        // Requete /api/utilisateurs
-        $client->request('GET', '/api/utilisateurs/1');
 
-        // Vérifie la connection
+        // Crée un utilisateur de test et récupère son ID
+        $user = $this->createTestUser($client);
+        $userId = $user['id'];
+
+        // Requête /api/utilisateurs/{id}
+        $client->request('GET', '/api/utilisateurs/' . $userId);
+
+        // Vérifie la connexion
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
 
         // Vérifie si la réponse contient l'utilisateur
@@ -40,21 +64,31 @@ class UserApiTest extends WebTestCase
 
     public function testUserOperations(): void
     {
-        // Test POST un utilisateur
         $client = static::createClient();
-        // Générer un e-mail aléatoire
-        $email = 'test_' . uniqid() . '@example.com';
-        $client->request('POST', '/api/utilisateurs', [], [], ['CONTENT_TYPE' => 'application/ld+json'], json_encode([
-            'email' => $email,
-            'password' => 'password',
-            'age' => 30
-        ]));
+        // Crée un utilisateur récupère son ID
+        $user = $this->createTestUser($client);
+        $userId = $user['id'];
+
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
 
-        // Test update un utilisateur
-        $client->request('PUT', '/api/utilisateurs/1', [], [], ['CONTENT_TYPE' => 'application/ld+json'], '{"email": "updated@example.com", "password": "password", "age": 35}');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $client->request('PUT', '/api/utilisateurs/1', [], [], ['CONTENT_TYPE' => 'application/ld+json'], '{"email": "notupdated@example.com", "password": "password", "age": 30}');
+        // Test update l'utilisateur
+        $client->request('PUT', '/api/utilisateurs/' . $userId, [], [], ['CONTENT_TYPE' => 'application/ld+json'], json_encode([
+            'email' => 'updated@example.com',
+            'password' => 'password',
+            'age' => 35
+        ]));
+
+        // Vérifie que l'update a été effectué
+        $client->request('GET', '/api/utilisateurs/' . $userId);
+        $responseData = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals('updated@example.com', $responseData['email']);
+
+        // Test de suppression de l'utilisateur
+        $client->request('DELETE', '/api/utilisateurs/' . $userId);
+        $this->assertEquals(204, $client->getResponse()->getStatusCode());
+
+        // Vérifie que l'utilisateur a été supprimé
+        $client->request('GET', '/api/utilisateurs/' . $userId);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
-    
 }
