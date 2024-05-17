@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile of {{ user.email }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Profile</h1>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Email: {{ user.email }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

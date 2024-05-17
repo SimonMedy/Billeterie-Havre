@@ -1,45 +1,125 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Events
+{% endblock %}
+{% block stylesheets %}
+	<style>
+		.card {
+			height: 400px;
+			width: 100%;
+		}
+		.card-img-top {
+			height: 180px;
+			object-fit: cover;
+			width: 100%;
+		}
+		.card-body {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+		.card-actions {
+			display: flex;
+			justify-content: space-around;        
+            padding: 10px 15px; 
+		}
+		.page-button {
+			margin: 0 5px;
+			padding: 5px 10px;
+			border: 1px solid #ccc;
+			background-color: #f8f9fa;
+			cursor: pointer;
+		}
+
+		.page-button:hover {
+			background-color: #e9ecef;
+		}
+	</style>
+{% endblock %}
 
 {% block body %}
-    <h1>Event index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Age_restrict</th>
-                <th>Annule</th>
-                <th>Message</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for event in events %}
-            <tr>
-                <td>{{ event.id }}</td>
-                <td>{{ event.nom }}</td>
-                <td>{{ event.date ? event.date|date('Y-m-d') : '' }}</td>
-                <td>{{ event.description }}</td>
-                <td>{{ event.ageRestrict }}</td>
-                <td>{{ event.annule ? 'Yes' : 'No' }}</td>
-                <td>{{ event.message }}</td>
-                <td>
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
-                    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
-                </td>
-            </tr>
+<div class="container mt-4">
+    <h1>Events</h1>
+    <div class="row">
+        {% for event in events|sort((a, b) => a.date <=> b.date) %}
+            <div class="col-md-4 mb-3 card-element">
+                <div class="card">
+                    {% if event.idType %}
+                        {% set imageFile = (event.idType.nom | lower | replace({' ': '-', '/': '-', '&': 'and'})) ~ '.jpeg' %}
+                        <img src="{{ asset('img/typeImage/' ~ imageFile) }}" class="card-img-top" alt="Image for {{ event.idType.nom }}">
+                    {% else %}
+                        <img src="{{ asset('img/typeImage/esport.webp') }}" class="card-img-top" alt="Default Image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ event.nom }}</h5>
+                        <p class="card-text"><strong>Date:</strong> {{ event.date ? event.date|date('Y-m-d H:i') : 'Date not set' }}</p>
+                        <p class="card-text">{{ event.description|slice(0, 100) ~ '...' }}</p>
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">View More</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-secondary">Edit</a>
+                            <a href="{{ path('app_event_delete', {'id': event.id}) }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                        {% endif %}
+                        {% if is_granted('ROLE_USER') %}
+                            <form method="post" action="{{ path('app_event_participate', {'id': event.id}) }}">
+                                <button type="submit" class="btn btn-success">Participate</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
+            <p>No events found.</p>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination"></ul>
+    </nav>
+</div>
+{% endblock %}
 
-    <a href="{{ path('app_event_new') }}">Create new</a>
+
+{% block javascripts %}
+	 <script>
+					document.addEventListener('DOMContentLoaded', function() {
+					    const cardsPerPage = 6;
+					    const cards = document.querySelectorAll('.card-element');
+					    const paginationElement = document.querySelector('.pagination');
+					
+					    function setupPagination(cards, wrapper, cardsPerPage) {
+					        wrapper.innerHTML = "";
+					        
+					        let pageCount = Math.ceil(cards.length / cardsPerPage);
+					        for (let i = 1; i <= pageCount; i++) {
+					            let btn = paginationButton(i, cards);
+					            wrapper.appendChild(btn);
+					        }
+					    }
+					
+					    function paginationButton(page, cards) {
+					        let button = document.createElement('button');
+					        button.innerText = page;
+					        button.className = 'page-button';
+					        button.addEventListener('click', function () {
+					            displayCards(page, cards);
+					        });
+					
+					        return button;
+					    }
+					
+					    function displayCards(page, cards) {
+					        let start = (page - 1) * cardsPerPage;
+					        let end = start + cardsPerPage;
+					        cards.forEach((card, index) => {
+					            if (index >= start && index < end) {
+					                card.style.display = 'block'; 
+					            } else {
+					                card.style.display = 'none';
+					            }
+					        });
+					    }
+					
+					    displayCards(1, cards); 
+					    setupPagination(cards, paginationElement, cardsPerPage);
+					});
+					</script>
 {% endblock %}

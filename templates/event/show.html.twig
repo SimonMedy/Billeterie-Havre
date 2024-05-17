@@ -1,46 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event{% endblock %}
+{% block title %}Event Details{% endblock %}
 
 {% block body %}
-    <h1>Event</h1>
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">{{ event.nom }}</h1>
+            <h2 class="text-muted">{{ event.date ? event.date|date('l, F jS Y') : '' }}</h2>
+            <p class="card-text">{{ event.description }}</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Age Restriction: </strong>{{ event.ageRestrict ? event.ageRestrict ~ ' years' : 'None' }}</p>
+                    <p><strong>Status: </strong>{{ event.annule ? 'Cancelled' : 'Scheduled' }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Message: </strong>{{ event.message }}</p>
+                </div>
+            </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ event.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ event.nom }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ event.date ? event.date|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ event.description }}</td>
-            </tr>
-            <tr>
-                <th>Age_restrict</th>
-                <td>{{ event.ageRestrict }}</td>
-            </tr>
-            <tr>
-                <th>Annule</th>
-                <td>{{ event.annule ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Message</th>
-                <td>{{ event.message }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_event_index') }}">back to list</a>
-
-    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
-
-    {{ include('event/_delete_form.html.twig') }}
+            <div class="mt-4">
+                <a href="{{ path('app_event_index') }}" class="btn btn-primary">Back to Events</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-secondary">Edit Event</a>
+                    {{ include('event/_delete_form.html.twig') }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
