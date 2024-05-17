@@ -33,6 +33,7 @@ class EventType extends AbstractType
                 'choice_label' => 'id',
                 'multiple' => true,
             ])
+            ->add('complet')
         ;
     }
 
