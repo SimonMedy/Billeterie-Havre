@@ -114,10 +114,28 @@ class EventController extends AbstractController
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
     }
+    
     #[Route('/{id}/participate', name: 'app_event_participate', methods: ['POST'])]
-public function participate(Request $request, Event $event, EntityManagerInterface $entityManager): Response
-{
-    return $this->redirectToRoute('app_event_index');
-}
+    public function participate(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser(); 
+        if (!$user) {
+            $this->addFlash('error', 'You must be logged in to participate.'); 
+            return $this->redirectToRoute('app_login');
+        }
+    
+        if ($event->getReservation()->contains($user)) {
+            $this->addFlash('error', 'You are already registered for this event.');
+            return $this->redirectToRoute('app_event_index');
+        }
+    
+        $event->addReservation($user);
+        $entityManager->persist($event);
+        $entityManager->flush();
+    
+        $this->addFlash('success', 'You have successfully registered for the event.');
+        return $this->redirectToRoute('app_event_index');
+    }
+    
 
 }

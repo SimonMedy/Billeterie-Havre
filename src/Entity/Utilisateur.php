@@ -8,6 +8,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -24,13 +26,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
-     * @var list<string> The user roles
+     * The user roles
      */
     #[ORM\Column]
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -38,8 +40,13 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $age = null;
 
+    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'utilisateurs')]
+    #[ORM\JoinTable(name: 'event_utilisateur')]
+    private Collection $events;
+
     public function __construct()
     {
+        $this->events = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
     }
 
@@ -53,68 +60,44 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     * @return list<string>
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
     public function getAge(): ?int
@@ -122,10 +105,31 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->age;
     }
 
-    public function setAge(int $age): static
+    public function setAge(int $age): self
     {
         $this->age = $age;
+        return $this;
+    }
 
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->addReservation($this);  
+        }
+        return $this;
+    }
+   
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->removeElement($event)) {
+            $event->removeReservation($this);  
+        }
         return $this;
     }
 }
