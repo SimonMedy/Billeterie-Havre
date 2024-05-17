@@ -12,18 +12,18 @@
             
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Age Restriction: </strong>{{ event.ageRestrict ? event.ageRestrict ~ ' years' : 'None' }}</p>
+                    <p><strong>Restriction d'age : </strong>{{ event.ageRestrict ? event.ageRestrict ~ ' years' : 'None' }}</p>
                     <p><strong>Status: </strong>{{ event.annule ? 'Cancelled' : 'Scheduled' }}</p>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Message: </strong>{{ event.message }}</p>
+                    <p><strong>Message : </strong>{{ event.message }}</p>
                 </div>
             </div>
 
             <div class="mt-4">
-                <a href="{{ path('app_event_index') }}" class="btn btn-primary">Back to Events</a>
+                <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retourner aux évènements</a>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-secondary">Edit Event</a>
+                    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-secondary">Modifier</a>
                     {{ include('event/_delete_form.html.twig') }}
                 {% endif %}
             </div>

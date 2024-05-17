@@ -48,7 +48,7 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h1>Events</h1>
+    <h1>Evènements</h1>
     <div class="row">
         {% for event in events|sort((a, b) => a.date <=> b.date) %}
             <div class="col-md-4 mb-3 card-element">
@@ -63,14 +63,14 @@
                         <h5 class="card-title">{{ event.nom }}</h5>
                         <p class="card-text"><strong>Date:</strong> {{ event.date ? event.date|date('Y-m-d H:i') : 'Date not set' }}</p>
                         <p class="card-text">{{ event.description|slice(0, 100) ~ '...' }}</p>
-                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">View More</a>
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-primary">Voir plus</a>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-secondary">Edit</a>
-                            <a href="{{ path('app_event_delete', {'id': event.id}) }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                            <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-secondary">Modifier</a>
+                            <a href="{{ path('app_event_delete', {'id': event.id}) }}" class="btn btn-danger" onclick="return confirm('Are you sure?')">Supprimer</a>
                         {% endif %}
                         {% if is_granted('ROLE_USER') %}
                             <form method="post" action="{{ path('app_event_participate', {'id': event.id}) }}">
-                                <button type="submit" class="btn btn-success">Participate</button>
+                                <button type="submit" class="btn btn-success">Participer</button>
                             </form>
                         {% endif %}
                     </div>

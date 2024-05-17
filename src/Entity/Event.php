@@ -45,6 +45,9 @@ class Event
     #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'events')]
     private Collection $Reservation;
 
+    #[ORM\Column]
+    private ?bool $complet = null;
+
     public function __construct()
     {
         $this->Reservation = new ArrayCollection();
@@ -160,6 +163,18 @@ class Event
     public function removeReservation(User $reservation): static
     {
         $this->Reservation->removeElement($reservation);
+
+        return $this;
+    }
+
+    public function isComplet(): ?bool
+    {
+        return $this->complet;
+    }
+
+    public function setComplet(bool $complet): static
+    {
+        $this->complet = $complet;
 
         return $this;
     }
