@@ -7,6 +7,7 @@ use App\Form\TypeType;
 use App\Repository\TypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,6 +18,10 @@ class TypeController extends AbstractController
     #[Route('/', name: 'app_type_index', methods: ['GET'])]
     public function index(TypeRepository $typeRepository): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+
+        }
         return $this->render('type/index.html.twig', [
             'types' => $typeRepository->findAll(),
         ]);
