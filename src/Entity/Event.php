@@ -42,7 +42,7 @@ class Event
     /**
      * @var Collection<int, User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events')]
+    #[ORM\ManyToMany(targetEntity: Utilisateur::class, inversedBy: 'events')]
     private Collection $Reservation;
 
     #[ORM\Column]
@@ -159,6 +159,7 @@ class Event
         return $this;
     }
 
+    
     public function removeReservation(User $reservation): static
     {
         $this->Reservation->removeElement($reservation);

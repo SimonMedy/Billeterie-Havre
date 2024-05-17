@@ -1,14 +1,129 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil de {{ user.email }}{% endblock %}
+{% block title %}Profile of
+	{{ user.email }}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.reservation-card {
+			margin-bottom: 20px;
+		}
+		.card-header {
+			background-color: #f8f9fa;
+			border-bottom: 1px solid #e3e6f0;
+			font-weight: bold;
+		}
+		.card-body {
+			padding: 20px;
+		}
+		.withdraw-button {
+			background-color: #dc3545;
+			color: #ffffff;
+			border: none;
+			cursor: pointer;
+			padding: 5px 10px;
+			border-radius: 5px;
+			text-decoration: none;
+		}
+		.withdraw-button:hover {
+			background-color: #c82333;
+		}
+	</style>
+{% endblock %}
+
 
 {% block body %}
-<div class="container">
-    <h1>Votre profil</h1>
-    <div class="card">
-        <div class="card-body">
-            <p class="card-text">Email: {{ user.email }}</p>
-        </div>
-    </div>
-</div>
+	<div class="container">
+		<h1>Profile</h1>
+		<div class="card">
+			<div class="card-body">
+				<p class="card-text">Email:
+					{{ user.email }}</p>
+				<h3>My Reservations</h3>
+				<div class="row">
+					{% for event in user.events %}
+						<div class="col-md-6 col-lg-4 reservation-card">
+							<div class="card">
+								<div class="card-header">{{ event.nom }}</div>
+								<div class="card-body">
+									<p>Date:
+										{{ event.date|date('Y-m-d H:i') }}</p>
+									<p>
+										<button class="btn btn-danger btn-sm withdraw-button" onclick="withdrawEvent({{ event.id }})">Withdraw</button>
+									</p>
+									<p>
+										<button id="download-pdf-{{ event.id }}" class="btn btn-primary" onclick="setupDownloadPdfButton({{ event.id }}, '{{ event.nom|e('js') }}', '{{ event.date|date('Y-m-d H:i')|e('js') }}')">Download Event PDF</button>
+										<div id="qrcode" style="display: none;"></div>
+									</p>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<p>No reservations found.</p>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %} <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
+	 <script>
+				function withdrawEvent(eventId) {
+				    fetch(`/profile/withdraw/${eventId}`, {
+				        method: 'POST',
+				        headers: {
+				            'X-Requested-With': 'XMLHttpRequest',
+				            'Content-Type': 'application/json',
+				            'X-CSRF-TOKEN': '{{ csrf_token('withdraw') }}'
+				        },
+				        body: JSON.stringify({ _token: '{{ csrf_token('withdraw') }}' })
+				    })
+				    .then(response => {
+				        if (!response.ok) throw new Error('Network response was not ok');
+				        return response.json();
+				    })
+				    .then(data => {
+				        if (data.success) {
+				            location.reload(); 
+				        } else {
+				            alert(data.error || 'Could not withdraw from the event.');
+				        }
+				    })
+				    .catch(error => console.error('Error:', error));
+				}
+				
+				function setupDownloadPdfButton(eventId, eventName, eventDate) {
+				    const buttonId = `download-pdf-${eventId}`;
+				    document.getElementById(buttonId).addEventListener('click', function() {
+				        new QRCode(document.getElementById('qrcode'), {
+				            text: 'Event ID: ' + eventId,
+				            width: 100,
+				            height: 100,
+				            colorDark: "#000000",
+				            colorLight: "#ffffff",
+				            correctLevel: QRCode.CorrectLevel.H
+				        });
+				
+				        const { jsPDF } = window.jspdf;
+				        const doc = new jsPDF();
+				
+				        doc.text(eventName, 10, 10);
+				        doc.text('Date: ' + eventDate, 10, 20);
+				        doc.text('Event ID: ' + eventId, 10, 30);
+				
+				        const qrcodeCanvas = document.querySelector('#qrcode canvas');
+				        const qrcodeImgData = qrcodeCanvas.toDataURL('image/png');
+				
+				        doc.addImage(qrcodeImgData, 'PNG', 10, 40, 50, 50);
+				
+				        doc.save('event-details.pdf');
+				
+				        document.getElementById('qrcode').innerHTML = '';
+				    });
+				}
+				</script>
 {% endblock %}
