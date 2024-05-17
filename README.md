@@ -28,3 +28,7 @@ yarn install
 
 npm run dev
 # Compilation des assets CSS et JavaScript avec encore
+
+symfony serve
+
+Enjoy (づ｡◕‿‿◕｡)づ
