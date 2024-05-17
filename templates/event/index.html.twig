@@ -3,39 +3,48 @@
 {% block title %}Events
 {% endblock %}
 {% block stylesheets %}
-	<style>
-		.card {
-			height: 400px;
-			width: 100%;
-		}
-		.card-img-top {
-			height: 180px;
-			object-fit: cover;
-			width: 100%;
-		}
-		.card-body {
-			display: flex;
-			flex-direction: column;
-			justify-content: space-between;
-		}
-		.card-actions {
-			display: flex;
-			justify-content: space-around;        
-            padding: 10px 15px; 
-		}
-		.page-button {
-			margin: 0 5px;
-			padding: 5px 10px;
-			border: 1px solid #ccc;
-			background-color: #f8f9fa;
-			cursor: pointer;
-		}
-
-		.page-button:hover {
-			background-color: #e9ecef;
-		}
-	</style>
+<style>
+    .card {
+        height: auto; 
+        width: 100%;
+        display: flex;
+        flex-direction: column; 
+    }
+    .card-img-top {
+        height: 180px;
+        object-fit: cover;
+        width: 100%;
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 15px; 
+    }
+    .card-actions {
+        display: flex;
+        flex-wrap: wrap; 
+        justify-content: space-around;
+        margin-top: 10px; 
+    }
+    .btn {
+        padding: 5px 10px; 
+        font-size: 0.8rem; 
+        margin: 2px; 
+    }
+    .page-button {
+        margin: 0 5px;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+    .page-button:hover {
+        background-color: #e9ecef;
+    }
+</style>
 {% endblock %}
+
 
 {% block body %}
 <div class="container mt-4">
