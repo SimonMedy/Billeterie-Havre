@@ -5,8 +5,9 @@ Une brève description de ce que fait votre projet et à qui il s'adresse. Ce pr
 
 Avant de commencer, assurez-vous d'avoir installé les outils suivants sur votre machine :
 - [PHP 8.2](https://www.php.net/releases/8_2_0.php) - La version 8.2 de PHP est requise.
-- [Composer](https://getcomposer.org/) - Gestionnaire de dépendances pour PHP
-- [Node.js](https://nodejs.org/) - Environnement d'exécution pour JavaScript (npm est inclus)
+- [Composer](https://getcomposer.org/) - Gestionnaire de dépendances pour PHP.
+- [Symfony 7](https://symfony.com/download) - La version 7 de Symfony est rapide.
+- [Node.js](https://nodejs.org/) - Environnement d'exécution pour JavaScript. (npm est inclus)
 
 ## Installation
 
