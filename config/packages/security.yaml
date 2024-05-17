@@ -40,7 +40,7 @@ security:
         - { path: ^/event/new, roles: ROLE_ADMIN }
         - { path: ^/event/edit, roles: ROLE_ADMIN }
         - { path: ^/event/delete, roles: ROLE_ADMIN }
-        - { path: ^/event, roles: ROLE_USER }
+        # - { path: ^/event, roles: ROLE_USER }
         - { path: ^/profile, role: ROLE_USER }
 
 when@test:
